@@ -1,4 +1,4 @@
-package com.louisgeek.louisareaselectdemo;
+package com.louisgeek.louisareaselectdemo.Bean;
 
 /**
  * Created by louisgeek on 2016/5/30.

@@ -1,4 +1,4 @@
-package com.louisgeek.louisareaselectdemo;
+package com.louisgeek.louisareaselectdemo.Bean;
 
 import java.util.List;
 

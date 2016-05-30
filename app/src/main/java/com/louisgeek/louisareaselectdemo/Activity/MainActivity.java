@@ -1,13 +1,23 @@
-package com.louisgeek.louisareaselectdemo;
+package com.louisgeek.louisareaselectdemo.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.louisgeek.louisareaselectdemo.Adapter.MyBaseAreaAdapter;
+import com.louisgeek.louisareaselectdemo.Adapter.MyBaseCityAdapter;
+import com.louisgeek.louisareaselectdemo.Adapter.MyBaseProvinceAdapter;
+import com.louisgeek.louisareaselectdemo.Bean.Area;
+import com.louisgeek.louisareaselectdemo.Bean.City;
+import com.louisgeek.louisareaselectdemo.Bean.Province;
+import com.louisgeek.louisareaselectdemo.R;
+import com.louisgeek.louisareaselectdemo.util.SharedPreferencesUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -48,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button idbtn = (Button) findViewById(R.id.id_btn);
+        idbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,SelectAreaActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         idsparea = (Spinner) findViewById(R.id.id_sp_area);
         idspcity = (Spinner) findViewById(R.id.id_sp_city);

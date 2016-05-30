@@ -1,4 +1,4 @@
-package com.louisgeek.louisareaselectdemo;
+package com.louisgeek.louisareaselectdemo.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,29 +7,30 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.louisgeek.louisareaselectdemo.Bean.City;
+
 import java.util.List;
 
 /**
  * Created by louisgeek on 2016/5/30.
  */
-public class MyBaseAreaAdapter extends BaseAdapter{
-
-    List<Area> areaList;
+public class MyBaseCityAdapter extends BaseAdapter {
+    List<City> cityList;
     Context mContext;
 
-    public MyBaseAreaAdapter(List<Area> areaList, Context context) {
-        this.areaList = areaList;
+    public MyBaseCityAdapter(List<City> cityList, Context context) {
+        this.cityList = cityList;
         mContext = context;
     }
 
     @Override
     public int getCount() {
-        return areaList.size();
+        return cityList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return areaList.get(position);
+        return cityList.get(position);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class MyBaseAreaAdapter extends BaseAdapter{
         ViewHolder viewHolder;
         if (convertView==null){
             viewHolder=new ViewHolder();
-            convertView= LayoutInflater.from(mContext).inflate(android.R.layout.simple_spinner_item,parent,false);
+            convertView=LayoutInflater.from(mContext).inflate(android.R.layout.simple_spinner_item,parent,false);
             viewHolder.text1= (TextView) convertView.findViewById(android.R.id.text1);
 
             convertView.setTag(viewHolder);
@@ -51,7 +52,7 @@ public class MyBaseAreaAdapter extends BaseAdapter{
             viewHolder= (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.text1.setText(areaList.get(position).getAreaName());
+        viewHolder.text1.setText(cityList.get(position).getCityName());
 
         return convertView;
     }

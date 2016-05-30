@@ -1,4 +1,4 @@
-package com.louisgeek.louisareaselectdemo;
+package com.louisgeek.louisareaselectdemo.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
