@@ -8,6 +8,9 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +21,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+
 public class MainActivity extends AppCompatActivity {
 
+    String areaJsonUrl="https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/app/src/main/res/raw/ssq.json";
     List<Province> provinceList;
     List<City> cityList;
     List<Area> areaList;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     MyBaseCityAdapter myBaseCityAdapter;
     MyBaseAreaAdapter myBaseAreaAdapter;
 
+    String ssq_json;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +53,63 @@ public class MainActivity extends AppCompatActivity {
         idspcity = (Spinner) findViewById(R.id.id_sp_city);
         idspprovince = (Spinner) findViewById(R.id.id_sp_province);
 
-        initData();
+
+        // ssq_json= getStringFromRaw(R.raw.ssq);
+        if (SharedPreferencesUtil.containsKey(this)&&!SharedPreferencesUtil.getValue(this).equals("")){
+            ssq_json=SharedPreferencesUtil.getValue(this);
+            Toast.makeText(MainActivity.this, "缓存", Toast.LENGTH_SHORT).show();
+            initData();
+            initSpinner();
+        }else{
+            Toast.makeText(MainActivity.this, "请求服务器", Toast.LENGTH_SHORT).show();
+
+            idsparea.setVisibility(View.INVISIBLE);
+            idspcity.setVisibility(View.INVISIBLE);
+            idspprovince.setVisibility(View.INVISIBLE);
+
+            OkHttpUtils
+                    .get()
+                    .url(areaJsonUrl)
+                    .addParams("username", "abc")
+                    .addParams("password", "123")
+                    .build()
+                    .execute(new StringCallback()
+                    {
+                        @Override
+                        public void onError(Call call, Exception e)
+                        {
+
+                        }
+
+                        @Override
+                        public void onResponse(String response)
+                        {
+                            if (response!=null&&!response.equals("")) {
+                                ssq_json=response;
+                                SharedPreferencesUtil.saveValue(MainActivity.this, ssq_json);
+                                initData();
+                                initSpinner();
+
+                                idsparea.setVisibility(View.VISIBLE);
+                                idspcity.setVisibility(View.VISIBLE);
+                                idspprovince.setVisibility(View.VISIBLE);
+
+                            }else{
+
+                            }
+
+                        }
+                    });
+        }
 
 
+
+
+
+
+    }
+
+    private void initSpinner() {
         myBaseProvinceAdapter = new MyBaseProvinceAdapter(provinceList, this);
         idspprovince.setAdapter(myBaseProvinceAdapter);
         idspprovince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -59,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 myBaseCityAdapter = new MyBaseCityAdapter(cityList, MainActivity.this);
                 idspcity.setAdapter(myBaseCityAdapter);
 
-                Toast.makeText(MainActivity.this, "click province" + provinceList.get(nowProvincePos).getProvinceName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "click province" + provinceList.get(nowProvincePos).getProvinceName(), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -103,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 nowAreaPos = position;
                 Area area = provinceList.get(nowProvincePos).getCites().get(nowCityPos).getAreas().get(nowAreaPos);
 
-                Toast.makeText(MainActivity.this, "click area" + area.getAreaName(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MainActivity.this, "click area" + area.getAreaName(), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -114,15 +175,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
 
     private void initData() {
-        String jsonStr = getStringFromRaw(R.raw.ssq);
 
         try {
 
             //
-            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONObject jsonObject = new JSONObject(ssq_json);
             JSONObject o_provinces = jsonObject.getJSONObject("provinces");
             JSONArray a_province = o_provinces.getJSONArray("province");
             //===
