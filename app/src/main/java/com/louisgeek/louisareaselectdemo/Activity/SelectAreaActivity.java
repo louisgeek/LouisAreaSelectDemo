@@ -33,26 +33,25 @@ public class SelectAreaActivity extends AppCompatActivity {
     private void initData() {
 
         mItems = new ArrayList<String>();
-        mItems.add("Diary of a Wimpy Kid 6: Cabin Fever");
+        mItems.add("Diary");
+        mItems.add("Steve");
+        mItems.add("Inheritance");
+        mItems.add("1845822");
+        mItems.add("The");
+        mItems.add("The LEGO");
+        mItems.add("Explosive");
+        mItems.add("Catching");
+        mItems.add("Elder");
+        mItems.add("Death");
+        mItems.add("Diary");
         mItems.add("Steve Jobs");
-        mItems.add("Inheritance (The Inheritance Cycle)");
-        mItems.add("11/22/63: A Novel");
+        mItems.add("Inheritance The");
         mItems.add("The Hunger Games");
-        mItems.add("The LEGO Ideas Book");
-        mItems.add("Explosive Eighteen: A Stephanie Plum Novel");
-        mItems.add("Catching Fire (The Second Book of the Hunger Games)");
-        mItems.add("Elder Scrolls V: Skyrim: Prima Official Game Guide");
-        mItems.add("Death Comes to Pemberley");
-        mItems.add("Diary of a Wimpy Kid 6: Cabin Fever");
-        mItems.add("Steve Jobs");
-        mItems.add("Inheritance (The Inheritance Cycle)");
-        mItems.add("11/22/63: A Novel");
-        mItems.add("The Hunger Games");
-        mItems.add("The LEGO Ideas Book");
-        mItems.add("Explosive Eighteen: A Stephanie Plum Novel");
-        mItems.add("Catching Fire (The Second Book of the Hunger Games)");
-        mItems.add("Elder Scrolls V: Skyrim: Prima Official Game Guide");
-        mItems.add("Death Comes to Pemberley");
+        mItems.add("The LEGO Ideas");
+        mItems.add("A Stephanie Plum Novel");
+        mItems.add("Catching Fire)");
+        mItems.add("Elder Scrolls");
+        mItems.add("Death Comes");
         Collections.sort(mItems);
 
 
