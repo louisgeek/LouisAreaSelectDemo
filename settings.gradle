@@ -1,1 +1,1 @@
-include ':app', ':IndexableListViewLib'
+include ':app', ':IndexableListViewLib', ':DropDownViewLib'

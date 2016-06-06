@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.louisgeek.dropdownviewlib.DropDownView;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseAreaAdapter;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseCityAdapter;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseProvinceAdapter;
@@ -29,7 +30,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 
@@ -53,7 +56,12 @@ public class MainActivity extends AppCompatActivity {
     MyBaseCityAdapter myBaseCityAdapter;
     MyBaseAreaAdapter myBaseAreaAdapter;
 
-    String ssq_json;
+    int nowShengPos=0;
+    DropDownView dropDownViews;
+    DropDownView dropDownViewshi;
+    DropDownView dropDownViewqu;
+
+            String ssq_json;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "缓存", Toast.LENGTH_SHORT).show();
             initData();
             initSpinner();
+            initDropDownView();
         }else{
             Toast.makeText(MainActivity.this, "请求服务器", Toast.LENGTH_SHORT).show();
 
@@ -108,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                                 SharedPreferencesUtil.saveValue(MainActivity.this, ssq_json);
                                 initData();
                                 initSpinner();
-
+                                initDropDownView();
                                 idsparea.setVisibility(View.VISIBLE);
                                 idspcity.setVisibility(View.VISIBLE);
                                 idspprovince.setVisibility(View.VISIBLE);
@@ -127,6 +136,64 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void  initDropDownView(){
+        dropDownViews= (DropDownView) findViewById(R.id.id_sheng);
+        dropDownViewshi= (DropDownView) findViewById(R.id.id_shi);
+        dropDownViewqu= (DropDownView) findViewById(R.id.id_qu);
+        //////
+
+        List<Map<String, Object>> nameStateList=new ArrayList<>();
+        for (int i = 0; i <provinceList.size() ; i++) {
+            Map<String, Object> map=new HashMap<>();
+            map.put("name",provinceList.get(i).getProvinceName());
+            map.put("index",i);
+            nameStateList.add(map);
+        }
+        dropDownViews.setupNameStateList(nameStateList);
+        dropDownViews.setOnItemClickListener(new DropDownView.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, Object> map) {
+                nowShengPos= Integer.parseInt(map.get("index").toString());
+                initInnerShi(nowShengPos);
+                initInnerQu(nowShengPos,0);
+            }
+        });
+        initInnerShi(0);
+        initInnerQu(0,0);
+    }
+    private void initInnerShi(int sheng_pos) {
+        dropDownViewshi.setText(dropDownViewshi.getDefaultText());
+        List<Map<String, Object>> nameStateList_shi=new ArrayList<>();
+        for (int i = 0; i <provinceList.get(sheng_pos).getCites().size(); i++) {
+            Map<String, Object> map=new HashMap<>();
+            map.put("name",provinceList.get(sheng_pos).getCites().get(i).getCityName());
+            map.put("index",i);
+            nameStateList_shi.add(map);
+        }
+        dropDownViewshi.setupNameStateList(nameStateList_shi);
+        dropDownViewshi.setOnItemClickListener(new DropDownView.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, Object> map) {
+                initInnerQu(nowShengPos,Integer.parseInt(map.get("index").toString()));
+            }
+        });
+    }
+
+    private void initInnerQu(int sheng_pos,int shi_pos) {
+        dropDownViewqu.setText(dropDownViewshi.getDefaultText());
+        List<Map<String, Object>> nameStateList_qu=new ArrayList<>();
+        for (int i = 0; i <provinceList.get(sheng_pos).getCites().get(shi_pos).getAreas().size(); i++) {
+            Map<String, Object> map=new HashMap<>();
+            map.put("name",provinceList.get(sheng_pos).getCites().get(shi_pos).getAreas().get(i).getAreaName());
+            map.put("index",i);
+            nameStateList_qu.add(map);
+        }
+        dropDownViewqu.setupNameStateList(nameStateList_qu);
+    }
+
+
+
 
     private void initSpinner() {
         myBaseProvinceAdapter = new MyBaseProvinceAdapter(provinceList, this);

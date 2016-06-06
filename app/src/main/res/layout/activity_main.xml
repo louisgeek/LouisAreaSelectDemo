@@ -39,10 +39,32 @@
                  android:layout_height="wrap_content">
         </Spinner>
     </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:id="@+id/id_ll_area2"
+                  android:layout_below="@id/id_ll_area"
+                  android:orientation="horizontal">
+        <com.louisgeek.dropdownviewlib.DropDownView
+            android:id="@+id/id_sheng"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <com.louisgeek.dropdownviewlib.DropDownView
+            android:id="@+id/id_shi"
+            android:layout_width="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:itemArray="@array/spinner_array_defalut"
+            android:layout_height="wrap_content"/>
+        <com.louisgeek.dropdownviewlib.DropDownView
+            android:id="@+id/id_qu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
     <Button
         android:id="@+id/id_btn"
-        android:layout_below="@id/id_ll_area"
+        android:layout_below="@id/id_ll_area2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="next"/>
