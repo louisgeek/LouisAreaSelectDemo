@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class DropDownView extends TextView implements View.OnClickListener {
 
-private  Context mContext;
+    private  Context mContext;
     private static final String TAG = "DropDownView";
     String[] items;
     View nowClickView;
@@ -64,7 +64,7 @@ private  Context mContext;
 
     private void init(Context context) {
         mContext=context;
-        if (this.getText()!=null&&this.getText().equals("")) {
+        if (this.getText()==null||this.getText().equals("")||this.getText().equals("null")) {
             this.setText("请选择");
         }
         defaultText=this.getText().toString();//
@@ -76,7 +76,7 @@ private  Context mContext;
         this.setOnClickListener(this);
         this.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_keyboard_arrow_down_blue_grey_400_18dp,0);
         this.setBackgroundResource(R.drawable.shape_list);
-
+        this.setSingleLine();
 
 
     }
@@ -108,6 +108,7 @@ private  Context mContext;
                 @Override
                 public void onItemSelect(Map<String,Object> map) {
                     ((DropDownView)nowClickView).setText(map.get("name").toString());
+                    ((DropDownView)nowClickView).setTag(R.id.hold_dropdown_id,map);
                     if (onItemClickListener!=null) {
                         onItemClickListener.onItemClick(map);
                     }
@@ -128,4 +129,12 @@ private  Context mContext;
 
     OnItemClickListener onItemClickListener;
 
+
+    public void setTextMy(String text) {
+        if (text==null||text.equals("")||text.equals("null")) {
+            this.setText("请选择");
+        }else{
+            this.setText(text);
+        }
+    }
 }

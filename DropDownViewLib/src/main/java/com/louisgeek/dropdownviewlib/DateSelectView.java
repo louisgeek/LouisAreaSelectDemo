@@ -34,7 +34,7 @@ public class DateSelectView extends TextView implements View.OnClickListener {
     private void init(Context context) {
         mContext=context;
 
-        if (this.getText()!=null&&this.getText().equals(""))
+        if (this.getText()==null||this.getText().equals("")||this.getText().equals("null"))
         {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             String date=sdf.format(new Date());
@@ -70,5 +70,18 @@ public class DateSelectView extends TextView implements View.OnClickListener {
                 ((DateSelectView)v).setText(dataStr);
             }
         });
+    }
+
+    public  void setTextMy(String text){
+        if (text==null||text.equals("")||text.equals("null"))
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            String date=sdf.format(new Date());
+            this.setText(date);
+        }else{
+            this.setText(text);
+        }
+
+
     }
 }

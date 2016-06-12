@@ -38,7 +38,9 @@ import okhttp3.Call;
 
 public class MainActivity extends AppCompatActivity {
 
-    String areaJsonUrl="https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/app/src/main/res/raw/ssq.json";
+   // String areaJsonUrl="https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/app/src/main/res/raw/ssq.json";
+    String areaJsonUrl="https://code.csdn.net/RichieZhu/web_files/blob/master/ssq.json";
+    //
     List<Province> provinceList;
     List<City> cityList;
     List<Area> areaList;
