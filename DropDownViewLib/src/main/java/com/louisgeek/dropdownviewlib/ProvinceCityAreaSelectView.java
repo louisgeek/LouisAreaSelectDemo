@@ -112,8 +112,8 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
                 initInnerArea(nowProvincePos,0);
             }
         });
-        initInnerCity(0);
-        initInnerArea(0,0);
+        //##initInnerCity(0);
+        //##initInnerArea(0,0);
     }
     private void initInnerCity(int province_pos) {
         id_ddv_city.setText(id_ddv_city.getDefaultText());
