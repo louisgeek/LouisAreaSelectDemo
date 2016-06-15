@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="hold_dropdown_id"/>
+    <item type="id" name="hold_dropdown_map"/>
+    <item type="id" name="hold_dropdown_key"/>
+
+    <item type="id" name="hold_id"/>
+    <item type="id" name="hold_userid"/>
 </resources>

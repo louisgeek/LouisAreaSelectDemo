@@ -63,12 +63,23 @@ public class MainActivity extends AppCompatActivity {
     DropDownView dropDownViewshi;
     DropDownView dropDownViewqu;
 
+    private DropDownView idQq;
             String ssq_json;
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button idbtn = (Button) findViewById(R.id.id_btn);
+
+
+        idQq = (DropDownView) findViewById(R.id.id_qq);
+        Log.d(TAG, "onCreate: getKeyByName"+ idQq.getKeyByName("选项2"));
+        Log.d(TAG, "onCreate: getNameByKey"+ idQq.getNameByKey("选项2"));
+        Log.d(TAG, "onCreate: getPositionByKey"+ idQq.getPositionByKey("opt2"));
+        Log.d(TAG, "onCreate: getPositionByName"+ idQq.getPositionByName("选项2"));
+
+
         idbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
         dropDownViews.setupNameStateList(nameStateList);
         dropDownViews.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
-            public void onItemClick(Map<String, Object> map) {
-                nowShengPos= Integer.parseInt(map.get("index").toString());
+            public void onItemClick(Map<String, Object> map,int pos) {
+                nowShengPos= pos;
                 initInnerShi(nowShengPos);
                 initInnerQu(nowShengPos,0);
             }
@@ -176,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
         dropDownViewshi.setupNameStateList(nameStateList_shi);
         dropDownViewshi.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
-            public void onItemClick(Map<String, Object> map) {
-                initInnerQu(nowShengPos,Integer.parseInt(map.get("index").toString()));
+            public void onItemClick(Map<String, Object> map,int pos) {
+                initInnerQu(nowShengPos,pos);
             }
         });
     }

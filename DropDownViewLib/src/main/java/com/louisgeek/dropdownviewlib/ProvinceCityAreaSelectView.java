@@ -43,6 +43,9 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
     String ssq_json;//省市区json
 
     TextView  id_areas_all_in;
+
+    int  nowProvince_index_setup=0;
+    int  nowCity_index_setup=0;
     private static final String TAG = "ProvinceCityArea";
     public ProvinceCityAreaSelectView(Context context) {
         super(context);
@@ -99,19 +102,20 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
         for (int i = 0; i <provinceList.size() ; i++) {
             Map<String, Object> map=new HashMap<>();
             map.put("name",provinceList.get(i).getProvinceName());
-            map.put("index",i);
-            map.put("ssqid",provinceList.get(i).getProvinceID());
+            map.put("key",provinceList.get(i).getProvinceID());
             nameStateList.add(map);
         }
         id_ddv_province.setupNameStateList(nameStateList);
         id_ddv_province.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
-            public void onItemClick(Map<String, Object> map) {
-                nowProvincePos= Integer.parseInt(map.get("index").toString());
+            public void onItemClick(Map<String, Object> map,int pos) {
+                nowProvincePos= pos;
+
                 initInnerCity(nowProvincePos);
                 initInnerArea(nowProvincePos,0);
             }
         });
+
         //##initInnerCity(0);
         //##initInnerArea(0,0);
     }
@@ -121,15 +125,16 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
         for (int i = 0; i <provinceList.get(province_pos).getCites().size(); i++) {
             Map<String, Object> map=new HashMap<>();
             map.put("name",provinceList.get(province_pos).getCites().get(i).getCityName());
-            map.put("index",i);
-            map.put("ssqid",provinceList.get(province_pos).getCites().get(i).getCityID());
+            map.put("key",provinceList.get(province_pos).getCites().get(i).getCityID());
             nameStateList_city.add(map);
         }
         id_ddv_city.setupNameStateList(nameStateList_city);
         id_ddv_city.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
-            public void onItemClick(Map<String, Object> map) {
-                initInnerArea(nowProvincePos,Integer.parseInt(map.get("index").toString()));
+            public void onItemClick(Map<String, Object> map,int pos) {
+
+                initInnerArea(nowProvincePos,pos);
+
             }
         });
     }
@@ -140,15 +145,14 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
         for (int i = 0; i <provinceList.get(province_pos).getCites().get(city_pos).getAreas().size(); i++) {
             Map<String, Object> map=new HashMap<>();
             map.put("name",provinceList.get(province_pos).getCites().get(city_pos).getAreas().get(i).getAreaName());
-            map.put("index",i);
-            map.put("ssqid",provinceList.get(province_pos).getCites().get(city_pos).getAreas().get(i).getAreaID());
+            map.put("key",provinceList.get(province_pos).getCites().get(city_pos).getAreas().get(i).getAreaID());
             nameStateList_area.add(map);
         }
         id_ddv_area.setupNameStateList(nameStateList_area);
     }
 
 
-    public String getStringFromRaw(int rawID) {
+    private String getStringFromRaw(int rawID) {
         String result = "";
         try {
             InputStream ssq_is = getResources().openRawResource(rawID);
@@ -231,8 +235,53 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
         id_ddv_area.setVisibility(VISIBLE);
 
         id_ddv_province.setTextMy(nowProvinceText);
-        id_ddv_city.setTextMy(nowProvinceText);
-        id_ddv_area.setTextMy(nowProvinceText);
+        if (!("").equals(nowCityText)){
+            id_ddv_city.setTextMy(nowCityText);
+            //
+            if (!("").equals(nowAreaText)){
+                id_ddv_area.setTextMy(nowAreaText);
+            }else{
+                initInnerArea(nowProvince_index_setup,nowCity_index_setup);
+            }
+        }else{
+            initInnerCity(nowProvince_index_setup);
+        }
+
+
+
+
+    }
+    public void setupProvinceCityAreaByID(String provinceid,String cityid,String areaid){
+       String province="";
+        String city="";
+        String area="";
+
+
+
+        for (int i = 0; i <provinceList.size() ; i++) {
+            if (provinceid.equals(provinceList.get(i).getProvinceID())){
+                province=provinceList.get(i).getProvinceName();
+                nowProvince_index_setup=i;
+                break;
+            }
+        }
+
+        for (int i = 0; i <provinceList.get(nowProvince_index_setup).getCites().size() ; i++) {
+            if (cityid.equals(provinceList.get(nowProvince_index_setup).getCites().get(i).getCityID())){
+                city=provinceList.get(nowProvince_index_setup).getCites().get(i).getCityName();
+                nowCity_index_setup=i;
+                break;
+            }
+        }
+
+        for (int i = 0; i <provinceList.get(nowProvince_index_setup).getCites().get(nowCity_index_setup).getAreas().size() ; i++) {
+            if (areaid.equals(provinceList.get(nowProvince_index_setup).getCites().get(nowCity_index_setup).getAreas().get(i).getAreaID())){
+                area=provinceList.get(nowProvince_index_setup).getCites().get(nowCity_index_setup).getAreas().get(i).getAreaName();
+                break;
+            }
+        }
+
+        setupProvinceCityArea(province,city,area);
     }
     public void setupProvinceCityAreaAll(String provincecityare_all_in){
 
@@ -245,9 +294,13 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
     }
 
     public String getProvinceCityArea(){
-        String ssq_sheng_id= (String) id_ddv_province.getTag(R.id.hold_dropdown_id);
-        String ssq_shi_id= (String)  id_ddv_province.getTag(R.id.hold_dropdown_id);
-        String ssq_qu_id= (String) id_ddv_province.getTag(R.id.hold_dropdown_id);
+
+        String ssq_sheng_id= (String) id_ddv_province.getTag(R.id.hold_dropdown_key);
+        String ssq_shi_id= (String)  id_ddv_city.getTag(R.id.hold_dropdown_key);
+        String ssq_qu_id= (String) id_ddv_area.getTag(R.id.hold_dropdown_key);
+        Log.d(TAG, "ssq_sheng_id:"+ssq_sheng_id);
+        Log.d(TAG, "ssq_shi_id:"+ssq_shi_id);
+        Log.d(TAG, "ssq_qu_id:"+ssq_qu_id);
         if (ssq_qu_id!=null&&!ssq_qu_id.equals(""))
         {
             return  ssq_qu_id;
@@ -256,7 +309,7 @@ public class ProvinceCityAreaSelectView extends LinearLayout{
         }else if (ssq_sheng_id!=null&&!ssq_sheng_id.equals("")){
             return ssq_sheng_id;
         }else{
-            return "";
+            return "000000";
         }
     }
 }

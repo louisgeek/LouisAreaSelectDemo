@@ -71,17 +71,17 @@ public class DropDownPopupWindow extends PopupWindow implements DropDownViewRecy
 
     @Override
     public void onItemViewClick(View v, int Position) {
-                 this.dismiss();
+           this.dismiss();
 
             Map<String,Object> nowMap =mNameStateList.get(Position);
 
-                onItemSelectListener.onItemSelect(nowMap);
+           onItemSelectListener.onItemSelect(nowMap,Position);
 
     }
 
 
     public interface OnItemSelectListener {
-        void onItemSelect(Map<String,Object> map);
+        void onItemSelect(Map<String,Object> map,int pos);
     }
 
     public void setOnItemSelectListener(OnItemSelectListener onItemSelectListener) {
@@ -148,4 +148,5 @@ public class DropDownPopupWindow extends PopupWindow implements DropDownViewRecy
         }
         return v.getMeasuredHeight();
     }
+
 }

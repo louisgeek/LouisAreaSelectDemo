@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -73,15 +74,23 @@ public class DateSelectView extends TextView implements View.OnClickListener {
     }
 
     public  void setTextMy(String text){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         if (text==null||text.equals("")||text.equals("null"))
         {
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             String date=sdf.format(new Date());
             this.setText(date);
         }else{
-            this.setText(text);
+            //先转
+            Date date=null;
+            try {
+                 date=sdf.parse(text);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String dateStr=sdf.format(date);
+            this.setText(dateStr);
         }
-
 
     }
 }
