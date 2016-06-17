@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.louisgeek.dropdownviewlib.DropDownView;
+import com.louisgeek.dropdownviewlib.ProvinceCityAreaSelectView;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseAreaAdapter;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseCityAdapter;
 import com.louisgeek.louisareaselectdemo.Adapter.MyBaseProvinceAdapter;
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: getPositionByKey"+ idQq.getPositionByKey("opt2"));
         Log.d(TAG, "onCreate: getPositionByName"+ idQq.getPositionByName("选项2"));
 
+        ProvinceCityAreaSelectView id_ll_area3= (ProvinceCityAreaSelectView)findViewById(R.id.id_ll_area3);
+        id_ll_area3.setupProvinceCityAreaByKey("330703");
 
         idbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             map.put("index",i);
             nameStateList.add(map);
         }
-        dropDownViews.setupNameStateList(nameStateList);
+        dropDownViews.setupDataList(nameStateList);
         dropDownViews.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
             public void onItemClick(Map<String, Object> map,int pos) {
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             map.put("index",i);
             nameStateList_shi.add(map);
         }
-        dropDownViewshi.setupNameStateList(nameStateList_shi);
+        dropDownViewshi.setupDataList(nameStateList_shi);
         dropDownViewshi.setOnItemClickListener(new DropDownView.OnItemClickListener() {
             @Override
             public void onItemClick(Map<String, Object> map,int pos) {
@@ -202,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             map.put("index",i);
             nameStateList_qu.add(map);
         }
-        dropDownViewqu.setupNameStateList(nameStateList_qu);
+        dropDownViewqu.setupDataList(nameStateList_qu);
     }
 
 

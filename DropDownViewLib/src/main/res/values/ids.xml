@@ -5,4 +5,7 @@
 
     <item type="id" name="hold_id"/>
     <item type="id" name="hold_userid"/>
+
+    <item type="id" name="hold_baseid"/>
+
 </resources>

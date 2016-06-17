@@ -31,11 +31,12 @@ private  Context mContext;
     }
 
     String defaultText;
-    public void setupNameStateList(List<Map<String, Object>> nameStateList) {
-        this.dataList.clear();
-        this.dataList.addAll(nameStateList);
-        Log.d(TAG, "setNameStateList: "+this.dataList.size());
-
+    public void setupDataList(List<Map<String, Object>> dataList) {
+        //if (dataList!=null&&dataList.size()>0) {
+            this.dataList.clear();
+            this.dataList.addAll(dataList);
+            Log.d(TAG, "setNameStateList: " + this.dataList.size());
+       // }
     }
 
     List<Map<String, Object>> dataList=new ArrayList<>();
@@ -126,6 +127,8 @@ private  Context mContext;
         this.setMaxWidth(temp_max_width);
         this.setEllipsize(TextUtils.TruncateAt.END);
 
+
+        dealParseList();//转换list
     }
 
     public int  dealTextMyW(int text_width,int text_ScaleX,int text_count){
@@ -140,18 +143,8 @@ private  Context mContext;
     public void onClick(View v) {
         nowClickView=v;
 
-        if (dataList!=null&&dataList.size()>0){
-            //code设置list
-        }else{
-            //code设置list
-            if (items_name_list!=null&&items_name_list.size()>0&&items_key_list!=null&&items_key_list.size()>0){
-                for (int i = 0; i < items_name_list.size(); i++) {
-                    Map<String, Object> map=new HashMap<>();
-                    map.put("key",items_key_list.get(i));
-                    map.put("name",items_name_list.get(i));
-                    dataList.add(map);
-                }
-            }
+        if (dataList==null||dataList.size()>0){
+            dealParseList();//转换list
         }
 
         if (dataList!=null&&dataList.size()>0){
@@ -160,8 +153,11 @@ private  Context mContext;
             myPopupwindow.setOnItemSelectListener(new DropDownPopupWindow.OnItemSelectListener() {
                 @Override
                 public void onItemSelect(Map<String,Object> map,int pos) {
-                    ((DropDownView)nowClickView).setText(map.get("name").toString());
+                    if (map.get("name")!=null) {
+                        ((DropDownView) nowClickView).setText(map.get("name").toString());
+                    }
                     nowClickView.setTag(R.id.hold_dropdown_map,map);
+                    //
                     if(map.get("key")!=null) {
                         nowClickView.setTag(R.id.hold_dropdown_key, map.get("key").toString());
                     }
@@ -175,6 +171,20 @@ private  Context mContext;
         Log.d(TAG, "onClick: "+dataList.size());
     }
 
+    private void dealParseList() {
+        if (dataList==null||dataList.size()<=0){
+            //from  XML
+            if (items_name_list!=null&&items_name_list.size()>0&&items_key_list!=null&&items_key_list.size()>0){
+                for (int i = 0; i < items_name_list.size(); i++) {
+                    Map<String, Object> map=new HashMap<>();
+                    map.put("key",items_key_list.get(i));
+                    map.put("name",items_name_list.get(i));
+                    dataList.add(map);
+                }
+            }
+        }
+    }
+
 
     public  interface OnItemClickListener{
         void  onItemClick(Map<String,Object> map,int pos);
@@ -186,22 +196,63 @@ private  Context mContext;
 
     OnItemClickListener onItemClickListener;
 
-
-    public void setTextMy(String text) {
-        if (text==null||text.equals("")||text.equals("null")) {
+    /**
+     * 通过key  设置name
+     * @param key
+     */
+    public void setSelectNameByKey(String key) {
+        if (key==null||key.equals("")||key.equals("null")||key.trim().equals("")) {
+            this.setText("请选择");
+        }else{
+            this.setText(this.getNameByKey(key));
+        }
+    }
+    /**
+     * 直接设置name
+     * @param text
+     */
+    public void setSelectName(String text) {
+        if (text==null||text.equals("")||text.equals("null")||text.trim().equals("")) {
             this.setText("请选择");
         }else{
             this.setText(text);
         }
     }
+    /**
+     * 得到所选的key
+     */
+    public String  getSelectKey() {
+        String key="";
+        if (this.getText()==null||this.getText().equals("")||this.getText().equals("null")||this.getText().toString().trim().equals("")) {
+           //
+        }else{
+            key=this.getKeyByName(this.getText().toString());
+        }
+        return  key;
+    }
 
+    /**
+     * 得到所选的name
+     */
+    public String  getSelectName() {
+        String name="";
+        if (this.getText()==null||this.getText().equals("")||this.getText().equals("null")||this.getText().toString().trim().equals("")||this.getText().equals("请选择")) {
+            name="";
+        }else{
+            name=this.getText().toString();
+        }
+        return  name;
+    }
 
+    /**
+     * 通过name得到所选的index
+     */
     public int getPositionByName(String name){
-        int pos=0;
+        int pos=-1;
         if (name!=null&&!name.equals("")){
 
-            for (int i = 0; i <items_name_list.size(); i++) {
-               if (items_name_list.get(i).equals(name)){
+            for (int i = 0; i <dataList.size(); i++) {
+               if (name.equals(dataList.get(i).get("name"))){
                    pos=i;
                    break;
                }
@@ -209,12 +260,16 @@ private  Context mContext;
         }
         return pos;
     }
+
+    /**
+     * 通过key得到所选的index
+     */
     public int getPositionByKey(String key){
-        int pos=0;
+        int pos=-1;
         if (key!=null&&!key.equals("")){
 
-            for (int i = 0; i <items_key_list.size(); i++) {
-                if (items_key_list.get(i).equals(key)){
+            for (int i = 0; i <dataList.size(); i++) {
+                if (key.equals(dataList.get(i).get("key"))){
                     pos=i;
                     break;
                 }
@@ -223,20 +278,34 @@ private  Context mContext;
         return pos;
     }
 
+    /**
+     * 通过key得到所选的name
+     */
     public String getNameByKey(String key){
+        String defaultName=getDefaultText();
         int pos=getPositionByKey(key);
-        return items_name_list.get(pos);
+        defaultName=pos==-1?defaultName:String.valueOf(dataList.get(pos).get("name"));
+        return defaultName;
     }
-
+    /**
+     * 通过name得到所选的key
+     */
     public String getKeyByName(String name){
+        String defaultKey="";
         int pos=getPositionByName(name);
-        return items_key_list.get(pos);
+        defaultKey=pos==-1?defaultKey:String.valueOf(dataList.get(pos).get("key"));
+        return defaultKey;
     }
-
+    /**
+     * 通过index得到所选的key
+     */
     public String getKeyByPosition(int position){
-        return items_key_list.get(position);
+        return String.valueOf(dataList.get(position).get("key"));
     }
+    /**
+     * 通过name得到所选的key
+     */
     public String getNameByPosition(int position){
-        return items_name_list.get(position);
+        return String.valueOf(dataList.get(position).get("name"));
     }
 }
