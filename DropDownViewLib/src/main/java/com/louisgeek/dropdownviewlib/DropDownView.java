@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.louisgeek.dropdownviewlib.tools.SizeTool;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,8 +93,8 @@ private  Context mContext;
         }
         defaultText=this.getText().toString();//
         if (this.getPaddingTop()==0&&this.getPaddingBottom()==0&&this.getPaddingLeft()==0&&this.getPaddingRight()==0) {
-            int paddingLeft_Right = dp2px(mContext, 8);
-            int paddingTop_Bottom = dp2px(mContext, 5);
+            int paddingLeft_Right = SizeTool.dp2px(mContext, 8);
+            int paddingTop_Bottom = SizeTool.dp2px(mContext, 5);
             this.setPadding(paddingLeft_Right, paddingTop_Bottom, paddingLeft_Right, paddingTop_Bottom);
         }
         this.setOnClickListener(this);
@@ -135,10 +137,7 @@ private  Context mContext;
        return text_width*text_count+text_ScaleX*(text_count-1);
     }
 
-    public int dp2px(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
+
     @Override
     public void onClick(View v) {
         nowClickView=v;
