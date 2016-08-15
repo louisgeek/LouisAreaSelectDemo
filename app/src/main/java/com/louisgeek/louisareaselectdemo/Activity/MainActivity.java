@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button idbtn = (Button) findViewById(R.id.id_btn);
-
+        Button idbtn2 = (Button) findViewById(R.id.id_btn2);
 
         idQq = (DropDownView) findViewById(R.id.id_qq);
         Log.d(TAG, "onCreate: getKeyByName"+ idQq.getKeyByName("选项2"));
@@ -87,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this,SelectAreaActivity.class);
+                startActivity(intent);
+            }
+        });
+        idbtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,MySelectAreaActivity.class);
                 startActivity(intent);
             }
         });

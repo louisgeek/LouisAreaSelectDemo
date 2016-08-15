@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".Activity.SelectAreaActivity">
         </activity>
+        <activity android:name=".Activity.MySelectAreaActivity">
+        </activity>
     </application>
 
 </manifest>

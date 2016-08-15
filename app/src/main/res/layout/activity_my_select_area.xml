@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.louisgeek.louisareaselectdemo.Activity.MySelectAreaActivity">
+    <android.support.v7.widget.RecyclerView
+    android:id="@+id/id_rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+    <!--layout_sticky_header_view位于RecyclerView的上面-->
+    <include layout="@layout/layout_sticky_header_view" />
+    <com.louisgeek.louisareaselectdemo.MyPinyinBannerView
+        android:id="@+id/id_mpbv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        android:id="@+id/text_showbox"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="#55555555"
+        android:gravity="center"
+        android:text="A"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        tools:visibility="visible" />
+</RelativeLayout>
