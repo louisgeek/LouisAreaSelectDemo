@@ -11,3 +11,5 @@
 ![image](https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/screenshots/screenshot.png)
 
 ![image](https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/screenshots/screenshot2.png)
+
+![image](https://raw.githubusercontent.com/louisgeek/LouisAreaSelectDemo/master/screenshots/pic3.png)
