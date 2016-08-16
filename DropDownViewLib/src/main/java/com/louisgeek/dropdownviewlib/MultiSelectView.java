@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.louisgeek.dropdownviewlib.adapter.MultiSelectViewRecycleViewAdapter;
+import com.louisgeek.dropdownviewlib.tools.SizeTool;
 import com.louisgeek.dropdownviewlib.ui.MutiSelectDialogFragment;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class MultiSelectView extends LinearLayout implements View.OnClickListener {
     private  Context mContext;
     RecyclerView mRecyclerView;
+    LinearLayout id_ll_MultiSelectView;
     String[] items_all;
     List<String>  items_key_list;
     List<String>  items_name_list;
@@ -34,7 +37,7 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
     public static final int  ONLY_SHOW_COLUMNS_DEFAULT=2;
     private  int  nowShowColumns;
     public static final int  ONLY_SHOW_ROWS=2;
-
+    private static final String TAG = "MultiSelectView";
     /**
      * 设置选项
      * @param multiSelectMapListOutter
@@ -47,13 +50,17 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
     private void dealLieAndHeight() {
         //更新列
         ((GridLayoutManager)mRecyclerView.getLayoutManager()).setSpanCount(dealColumns());
-        //更新高度
-        ViewGroup.LayoutParams vlp=mRecyclerView.getLayoutParams();
-        if (mMultiSelectMapListOutter.size()<=(ONLY_SHOW_ROWS-1)*nowShowColumns) {
+        //更新recyclerview外面的id_ll_MultiSelectView高度
+        ViewGroup.LayoutParams vlp=id_ll_MultiSelectView.getLayoutParams();
+        if (mMultiSelectMapListOutter.size()<=ONLY_SHOW_ROWS*nowShowColumns) {
+            Log.d(TAG, "dealLieAndHeight: WRAP_CONTENT ONLY_SHOW_ROWS："+ONLY_SHOW_ROWS+",nowShowColumns："+nowShowColumns);
             vlp.height=ViewGroup.LayoutParams.WRAP_CONTENT;
-            mRecyclerView.setLayoutParams(vlp);
+            id_ll_MultiSelectView.setLayoutParams(vlp);
         }else{
-            //xml 中 android:layout_height="105dp"
+            Log.d(TAG, "dealLieAndHeight: XML ONLY_SHOW_ROWS："+ONLY_SHOW_ROWS+",nowShowColumns："+nowShowColumns);
+            //layout_height="100dp"
+            vlp.height= SizeTool.dp2px(mContext,100);
+            id_ll_MultiSelectView.setLayoutParams(vlp);
         }
     }
 
@@ -87,7 +94,7 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
                 }
             }
         }
-            //
+        //
         int showColumns = typedArray.getInt(R.styleable.MultiSelectView_showColumns,0);
         if (showColumns>0){
             nowShowColumns=showColumns;
@@ -124,25 +131,29 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_mutiselect_enter, this);
 
-
+         id_ll_MultiSelectView= (LinearLayout) view.findViewById(R.id.id_ll_MultiSelectView);
         mRecyclerView= (RecyclerView) view.findViewById(R.id.id_rv);
         mMultiSelectViewRecycleViewAdapter=new MultiSelectViewRecycleViewAdapter(mMultiSelectMapListOutter,mContext,ONLY_SHOW_ROWS*nowShowColumns);
         mMultiSelectViewRecycleViewAdapter.setOnCheckboxSelectListener(new MultiSelectViewRecycleViewAdapter.OnCheckboxSelectListener() {
             @Override
             public void onCheckboxSelect(int pos, boolean isChecked) {
                 mMultiSelectMapListOutter.get(pos).put("checked",isChecked);
-                //mMultiSelectViewRecycleViewAdapter.updateDate(mMultiSelectMapListOutter);
+                Log.d(TAG, "onCheckboxSelect:pos:"+pos+"，isChecked:"+isChecked);
+                // mMultiSelectViewRecycleViewAdapter.updateDate(mMultiSelectMapListOutter);
+                if (onCheckedChangedOrFinishListener!=null) {
+                    onCheckedChangedOrFinishListener.onCheckedChanged(pos, isChecked);
+                }
             }
         });
 
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext,nowShowColumns));
-       // mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(nowShowColumns,5,true));
+        // mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(nowShowColumns,5,true));
         mRecyclerView.setAdapter(mMultiSelectViewRecycleViewAdapter);
 
         //mRecyclerView.addItemDecoration(new SpacesItemDecoration(10));
         //mRecyclerView.addItemDecoration(new SpacesItemDecorationTwo(5));
-      //  mRecyclerView.addItemDecoration(new ListSpacingDecoration(this));
+        //  mRecyclerView.addItemDecoration(new ListSpacingDecoration(this));
         //
         dealLieAndHeight();
         //
@@ -162,7 +173,7 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
     private int dealColumns() {
         if (mMultiSelectMapListOutter.size()< nowShowColumns){
             if (mMultiSelectMapListOutter.size()>1) {
-               return mMultiSelectMapListOutter.size();
+                return mMultiSelectMapListOutter.size();
             }
         }else{
             return nowShowColumns;
@@ -179,13 +190,16 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
         }*/
     @Override
     public void onClick(View v) {
-        MutiSelectDialogFragment myDialogFragment = MutiSelectDialogFragment.newInstance("");
+        MutiSelectDialogFragment myDialogFragment = MutiSelectDialogFragment.newInstance("",false);
         myDialogFragment.setCancelable(false);
-        myDialogFragment.setupMultiSelectMapListOut(mMultiSelectMapListOutter);
+        myDialogFragment.setupMultiSelectMapListOut(mMultiSelectMapListOutter,null);
         myDialogFragment.setOnBackDataListener(new MutiSelectDialogFragment.OnBackDataListener() {
             @Override
             public void onBackData(List<Map<String, Object>> multiSelectMapList, List<Map<String, Object>> selectMapList) {
                 setupMultiSelectMapListOutter(multiSelectMapList);
+                if (onCheckedChangedOrFinishListener!=null) {
+                    onCheckedChangedOrFinishListener.onCheckedFinish();//完成回调
+                }
             }
         });
         if (mContext instanceof AppCompatActivity){
@@ -209,11 +223,11 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
         String selectedKeys="";
         StringBuilder sb=new StringBuilder();
         if (mMultiSelectMapListOutter!=null&&mMultiSelectMapListOutter.size()>0){
-        for (int i = 0; i <mMultiSelectMapListOutter.size() ; i++) {
-            if (Boolean.parseBoolean(String.valueOf(mMultiSelectMapListOutter.get(i).get("checked")))) {
-                sb.append(String.valueOf(mMultiSelectMapListOutter.get(i).get("key")) + ",");
+            for (int i = 0; i <mMultiSelectMapListOutter.size() ; i++) {
+                if (Boolean.parseBoolean(String.valueOf(mMultiSelectMapListOutter.get(i).get("checked")))) {
+                    sb.append(String.valueOf(mMultiSelectMapListOutter.get(i).get("key")) + ",");
+                }
             }
-        }
         }
         selectedKeys=sb.toString();
         //去掉最后一个","
@@ -228,12 +242,12 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
     private void  setupSelectedKey(String[] selectedKeys) {
         List<String> strList= Arrays.asList(selectedKeys);
         List<Map<String,Object>> multiSelectMapListOutter_temp=new ArrayList<>();
-            for (int j = 0; j < mMultiSelectMapListOutter.size(); j++) {
-                 String key=String.valueOf(mMultiSelectMapListOutter.get(j).get("key"));
-                if (strList.contains(key)){
-                    mMultiSelectMapListOutter.get(j).put("checked",true);
-                }
-                multiSelectMapListOutter_temp.add(mMultiSelectMapListOutter.get(j));
+        for (int j = 0; j < mMultiSelectMapListOutter.size(); j++) {
+            String key=String.valueOf(mMultiSelectMapListOutter.get(j).get("key"));
+            if (strList.contains(key)){
+                mMultiSelectMapListOutter.get(j).put("checked",true);
+            }
+            multiSelectMapListOutter_temp.add(mMultiSelectMapListOutter.get(j));
         }
         mMultiSelectViewRecycleViewAdapter.updateDate(multiSelectMapListOutter_temp);
     }
@@ -248,4 +262,15 @@ public class MultiSelectView extends LinearLayout implements View.OnClickListene
         String[] selectedKeys=selectedKeyStr.split(",");
         this.setupSelectedKey(selectedKeys);
     }
+
+    public  interface  OnCheckedChangedOrFinishListener {
+        void onCheckedChanged(int pos, boolean isChecked);
+        void onCheckedFinish();
+    }
+
+    public void setOnCheckedChangedListener(OnCheckedChangedOrFinishListener onCheckedChangedOrFinishListener) {
+        this.onCheckedChangedOrFinishListener = onCheckedChangedOrFinishListener;
+    }
+
+    OnCheckedChangedOrFinishListener onCheckedChangedOrFinishListener;
 }
