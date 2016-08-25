@@ -29,4 +29,5 @@ dependencies {
     compile 'com.zhy:okhttputils:2.5.2'
     compile project(':IndexableListViewLib')
     compile project(':DropDownViewLib')
+    compile 'com.github.promeg:tinypinyin:1.0.0' // ~80KB
 }
