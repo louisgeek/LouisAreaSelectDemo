@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
+        android:background="@android:color/transparent"
         />
     <TextView
         android:background="@drawable/ic_keyboard_arrow_down_blue_grey_400_36dp"

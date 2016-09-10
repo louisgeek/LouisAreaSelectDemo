@@ -2,6 +2,7 @@ package com.louisgeek.dropdownviewlib;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +30,18 @@ public class DateSelectPopupWindow extends PopupWindow{
     private int mYear;
     private int mMonthOfYear;
     private int mDayOfMonth;
-
+    private static final String TAG = "DateSelectPopupWindow";
 
     private  String mNowDateTextInner;
+    private  String mStartDateTextInner;
+    private  String mEndDateTextInner;
 
-    public DateSelectPopupWindow(Context context,String nowDateTextInner) {
+    public DateSelectPopupWindow(Context context,String nowDateTextInner,String startDateTextInner,String endDateTextInner) {
         super(context);
         mContext = context;
         mNowDateTextInner=nowDateTextInner;
+        mStartDateTextInner=startDateTextInner;
+        mEndDateTextInner=endDateTextInner;
         initView();
         dateSelectPopupWindow=this;
     }
@@ -81,7 +86,7 @@ public class DateSelectPopupWindow extends PopupWindow{
         Calendar calendar;
         if(mNowDateTextInner!=null&&!mNowDateTextInner.equals("")&&!mNowDateTextInner.equals("null")){
             //显示上一次选择数据
-           Date date=DateTool.parseStr2Data(mNowDateTextInner,DateTool.FORMAT_DATE);
+           Date date=DateTool.parseStr2Date(mNowDateTextInner,DateTool.FORMAT_DATE);
            calendar=DateTool.parseDate2Calendar(date);
         }else{
             calendar=Calendar.getInstance();//初始化时间
@@ -98,7 +103,26 @@ public class DateSelectPopupWindow extends PopupWindow{
                 mDayOfMonth=dayOfMonth;
             }
         };
+        //
         datePick1.init(year,monthOfYear,dayOfMonth,dcl);
+        //
+        Log.i(TAG, "initDatePicker: mNowDateTextInner:"+mNowDateTextInner);
+        Log.i(TAG, "initDatePicker: mStartDateTextInner:"+mStartDateTextInner);
+        if (mStartDateTextInner!=null){
+            Calendar calendar_s=DateTool.parseStr2Calendar(mStartDateTextInner,DateTool.FORMAT_DATE);
+           long  time_s=calendar_s.getTimeInMillis();
+            Log.i(TAG, "initDatePicker: time_s:"+time_s);
+            datePick1.setMinDate(time_s);
+        }
+        Log.i(TAG, "initDatePicker: mEndDateTextInner:"+mEndDateTextInner);
+        if (mEndDateTextInner!=null){
+            Calendar calendar_e=DateTool.parseStr2Calendar(mEndDateTextInner,DateTool.FORMAT_DATE);
+            long  time_e=calendar_e.getTimeInMillis();
+            Log.i(TAG, "initDatePicker: calendar_e:"+calendar_e);
+            datePick1.setMaxDate(time_e);
+        }
+
+
     }
 
 

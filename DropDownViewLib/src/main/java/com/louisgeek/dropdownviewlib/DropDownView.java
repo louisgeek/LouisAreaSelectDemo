@@ -93,6 +93,7 @@ private  Context mContext;
             this.setText("请选择");
         }
         defaultText=this.getText().toString();//
+       // this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         if (this.getPaddingTop()==0&&this.getPaddingBottom()==0&&this.getPaddingLeft()==0&&this.getPaddingRight()==0) {
             int paddingLeft_Right = SizeTool.dp2px(mContext, 8);
             int paddingTop_Bottom = SizeTool.dp2px(mContext, 5);
@@ -109,7 +110,7 @@ private  Context mContext;
        // int text_ScaleX= (int) this.getTextScaleX();//字间距
         //
        // final int text_count=230;
-        int  temp_min_width=230;//三个字 大概
+        int  temp_min_width=SizeTool.dp2px(mContext,60);//三个字 大概
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (this.getMinWidth()!=-1&&this.getMinWidth()!=0){
                 temp_min_width=this.getMinWidth();
@@ -121,7 +122,7 @@ private  Context mContext;
          * setup max width
          */
        // final int text_count_MAX=10;
-        int  temp_max_width=520;//九个字 大概
+        int  temp_max_width=SizeTool.dp2px(mContext,130);//九个字 大概
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (this.getMaxWidth()!=-1&&this.getMaxWidth()!=0&&this.getMaxWidth()!=Integer.MAX_VALUE){
                 temp_max_width=this.getMaxWidth();

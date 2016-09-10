@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by louisgeek on 2016/6/17.
- */
+
 public class MultiSelectLayout extends RelativeLayout {
 
     private  Context mContext;

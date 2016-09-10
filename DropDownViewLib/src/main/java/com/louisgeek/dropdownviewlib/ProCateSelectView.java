@@ -89,6 +89,7 @@ public class ProCateSelectView extends LinearLayout{
         id_child_pro.setupDataList(dataList_area);
     }
 
+    @Deprecated
    public void setupProCateByKey(String key){
        String parentkey="";
        String childkey="";
@@ -112,6 +113,25 @@ public class ProCateSelectView extends LinearLayout{
            }
        }
    }
+    public void setupProCateByKey(String OneKey,String TwoKey){
+        String parentkey="";
+        String childkey="";
+        if(OneKey!=null&&!OneKey.equals("")) {
+                parentkey="0_"+OneKey;
+        }
+        if(TwoKey!=null&&!TwoKey.equals("")) {
+            childkey=OneKey+"_"+TwoKey;
+        }
+            id_parent_pro.setSelectNameByKey(parentkey);
+            int parent_pos= id_parent_pro.getPositionByKey(parentkey);
+            if (parent_pos>-1) {
+                initInnerChild(parent_pos);
+                if (!childkey.equals("")) {
+                    id_child_pro.setSelectNameByKey(childkey);
+                }
+            }
+       //
+    }
 
     public String  getProCateKey(){
         String parent_key = id_parent_pro.getSelectKey();
@@ -124,6 +144,15 @@ public class ProCateSelectView extends LinearLayout{
             return "0_0";
         }
     }
+    public String  getProCateNameOnlyChild(){
+      //  String parent_key = id_parent_pro.getSelectKey();
+        String child_name = id_child_pro.getSelectName();
+        if (child_name != null && !child_name.equals("")) {
+            return child_name;
+        } else {
+            return "";
+        }
+    }
     public int  getProCateKeyOnlyChildId(){
         int childId=0;
         String proCateKey=getProCateKey();
@@ -131,7 +160,9 @@ public class ProCateSelectView extends LinearLayout{
         if (proCateKey.contains("_")){
             String[] proCateKeys=proCateKey.split("_");
             if (proCateKeys!=null&&proCateKeys.length>0){
-                childId=Integer.valueOf(proCateKeys[0]);
+                if (proCateKeys.length>1&&proCateKeys[1]!=null){
+                childId=Integer.valueOf(proCateKeys[1]);
+                }
             }
         }
         }
